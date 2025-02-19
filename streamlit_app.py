@@ -1,56 +1,77 @@
 import streamlit as st
 import pandas as pd
-import gspread
-import os
-import json
-from oauth2client.service_account import ServiceAccountCredentials
+from supabase import create_client, Client
 
-# Google Sheets API setup
-SHEET_ID = "1zK6PC0vRuVvLZF0yoqhGDgUMIrt_3qT6_Qu2HcNWOwc"  # Replace with your Google Sheet ID
+# Supabase credentials (replace with your own)
+SUPABASE_URL = "https://ccuzilidjqzunseysfqd.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNjdXppbGlkanF6dW5zZXlzZnFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk5MzM5NDgsImV4cCI6MjA1NTUwOTk0OH0.s4BSBjcIiB2n1X_vlcXDg5AmMpbkySHkWIcK9PYkrJI"
 
-# Load credentials from GitHub Secrets (stored as an environment variable)
-service_account_info = json.loads(os.getenv("GOOGLE_CREDENTIALS"))
+# Initialize the Supabase client
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-# Authenticate with Google Sheets
-scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
-client = gspread.authorize(creds)
-
-# Open the Google Sheet
-sheet = client.open_by_key(SHEET_ID).sheet1
-
-# Function to append a choice to Google Sheets
-def save_to_google_sheets(choice_text):
-    sheet.append_row([choice_text])
-
-# Load data from GitHub
-csv_url = "https://raw.githubusercontent.com/andrewkyne/trademash/refs/heads/main/players.csv"
-
-@st.cache_data
-def load_data(url):
+# Function to load CSV from GitHub
+def load_csv_from_github(url: str):
     return pd.read_csv(url)
 
-df = load_data(csv_url)
+# Function to save the result to Supabase
+def save_to_supabase(winner: str, loser: str):
+    data = {
+        "winner": winner,
+        "loser": loser
+    }
+    supabase.table("user_data").insert(data).execute()
 
-if len(df) < 2:
-    st.error("Not enough data to make a selection.")
-else:
-    sample = df.sample(2).reset_index(drop=True)
+# Streamlit app
+def main():
+    # URL of the CSV file on GitHub
+    csv_url = "https://raw.githubusercontent.com/andrewkyne/trademash/refs/heads/main/players.csv?token=GHSAT0AAAAAAC7F6QRFJO4QXIFMVCRMTVCMZ5VKTRQ"
+     
+    # Load data
+    df = load_csv_from_github(csv_url)
 
-    def format_choice(row):
-        return f"{row['Player']} - {row['Team']} - {row['Position']} - ${row['Salary']}"
+    if 'submitted' not in st.session_state:
+        st.session_state['submitted'] = False
 
-    options = ["Select an option"] + list(sample.index)
+    # Initialize session state for random records if not already initialized
+    if "selected_records" not in st.session_state:
+        # Select two random records and store them in session state
+        st.session_state.selected_records = df.sample(2)
+        st.session_state.submitted = False  # Flag to track if submission has been made
 
-    st.title("Pick Your Favorite")
-    choice = st.radio(
-        "Select one of the following options:",
-        options=options,  
-        format_func=lambda x: "Select an option" if x == "Select an option" else format_choice(sample.iloc[x]),
-        index=0
-    )
+    # Get the selected records from session state
+    selected_records = st.session_state.selected_records
+    record_1 = selected_records.iloc[0]
+    record_2 = selected_records.iloc[1]
+    
+    # Display the two records to the user
+    st.write(f"Record 1: {record_1.to_dict()}")
+    st.write(f"Record 2: {record_2.to_dict()}")
+    
+    # Radio button for selecting the winner
+    winner_choice = st.radio("Which record do you prefer?", 
+                             (f"Record 1: {record_1.to_dict()}", 
+                              f"Record 2: {record_2.to_dict()}"))
+    
+    # Handle submit action
+    if st.button("Submit"):
+        # Ensure the submission happens only once
+        if not st.session_state.submitted:
+            if winner_choice.startswith("Record 1"):
+                save_to_supabase(record_1['Player'], record_2['Player'])
+            else:  # If user selects record 2
+                save_to_supabase(record_2['Player'], record_1['Player'])
+            
+            # Set the submission flag to True
+            st.session_state.submitted = True
+            st.success("Selection saved successfully!")
+        
+        # Optionally, create a button to load the next set of random records
+        if st.session_state.submitted:
+            next_set_button = st.button("Next Set of Records")
+            if next_set_button:
+                # Reset selected records to get a new random set
+                st.session_state.selected_records = df.sample(2)
+                st.session_state.submitted = False  # Reset submitted flag for the new round
 
-    if st.button("Submit Choice") and choice != "Select an option":
-        user_choice = format_choice(sample.iloc[choice])
-        save_to_google_sheets(user_choice)
-        st.success(f"Your choice has been saved to Google Sheets: {user_choice}")
+if __name__ == "__main__":
+    main()
