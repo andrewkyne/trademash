@@ -26,6 +26,8 @@ def main():
     # URL of the CSV file on GitHub
     csv_url = "https://raw.githubusercontent.com/andrewkyne/trademash/refs/heads/main/players.csv"
     
+    st.title("Fantasy Baseball 2.0 TradeMash")
+
     # Load data
     df = load_csv_from_github(csv_url)
 
@@ -41,26 +43,36 @@ def main():
     selected_records = st.session_state.selected_records
     record_1 = selected_records.iloc[0]
     record_2 = selected_records.iloc[1]
-    
-    # Display the two records to the user
-    st.write(f"Record 1: {record_1.to_dict()}")
-    st.write(f"Record 2: {record_2.to_dict()}")
+
+    # Format player display
+    def format_player(record):
+        return f"{record['Player']}, {record['Team']} - {record['Position']} - ${record['Salary']}"
+
+    # Format for saving
+    def format_for_saving(record):
+        return f"{record['Player']} ${record['Salary']}"
+
+    formatted_record_1 = format_player(record_1)
+    formatted_record_2 = format_player(record_2)
+
+    saved_record_1 = format_for_saving(record_1)
+    saved_record_2 = format_for_saving(record_2)
     
     # Radio button for selecting the winner
-    winner_choice = st.radio("Which record do you prefer?", 
-                             (f"Record 1: {record_1.to_dict()}", 
-                              f"Record 2: {record_2.to_dict()}"))
+    winner_choice = st.radio("Which player do you prefer?", 
+                             (f"Player 1: {formatted_record_1}", 
+                              f"Player 2: {formatted_record_2}"))
     
     # Handle submit action
     if st.button("Submit"):
         if not st.session_state.submitted:
-            if winner_choice.startswith("Record 1"):
-                save_to_supabase(record_1['Player'], record_2['Player'])
+            if winner_choice.startswith("Player 1"):
+                save_to_supabase(saved_record_1, saved_record_2)
             else:
-                save_to_supabase(record_2['Player'], record_1['Player'])
+                save_to_supabase(saved_record_2, saved_record_1)
             
             st.session_state.submitted = True
-            st.success("Selection saved successfully!")
+            st.success("Vote submitted!")
 
     # Always show the "Next Set of Records" button
     if st.button("Next Set of Records"):
