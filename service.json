@@ -1,0 +1,14 @@
+{
+    "type": "service_account",
+    "project_id": "trademash",
+    "private_key_id": "99799014653cf81fa27d80d907d0dcfe26b78c4c",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCijNAn+sRUWly4\nr7E666jb4hYf75x+su15yogz+m/qH2V2Ln+6hoZl5U9vF5Vlg1k0/S7FN2blQ3XJ\nG9JwBr9m/KB0kYld1cgSEGd91RpujchB4hsbT9bXslsmoE+fQ0fJr287Njp+sniJ\nXQ3CRBVY4A0khNCDqu4L5eEwuaTxZKszk/1PlAp8ZoshANgzjq+XgVikqTy4sYU4\nKR8behaPRaMbEdvoa9laBB/FP1uPalMIC1Wy65nIdN4ZRzBbzhqzj2RitXnVnibG\nEsYzoCs863HBzgRNUOeQYu4uXyFtgmRSt5sdiDpbQaJe1/WTam+h5R3BT8TdVj3k\nBD1O6GwHAgMBAAECggEAA4c36247fbM6aP3TRHqh/yfQoB/Uz0E1+1tEipBIhpXo\n32BSAGv0Fdkc2MXzxbDMqmRGdBxoPNiygUt7zVewJt2b4/vWtfUycwXtISOTf8vP\nCXMNcJHSkXr7FIMNR2Ev+TY4HVpneaGJET42Ur2kkvnF/0FsvzbiFNsIAMU+yciD\nL1uX/9LLErCv+F/CwnwyJNLFoiHbcQdUr8/tO355DTvLA2T1aFUb7YRJ0rT1wVuO\n2oYVdZcuGiE7ES4NHNhLolm0ousi7epKDxDfn92iRqgQ7Z7Gx3iNKiZqxhB5kxGb\n/Sh95Bslxe9qUZ2vB/r9C6KmxB0Nv0mxct1AzMQnlQKBgQDkU+Cc+NzpTJPuszHb\nYaWMn8Cp1IO5Nx23b7jZmfhJtIkTewJdnq6xkGVdxaAlAeFTIBYj4Hv/EHsXaMRI\nZzcd6Xiqc8UWHxs/e+C9vCm/FLY8DhWsuQ7hdtYmrIDZCfnqkglhJQlhQ5rGhAS3\nRcQeWG9riCZq2D7dbyNGytGrqwKBgQC2QByXbEIrzsZYNhFe20bgBHSQxrM5BXFN\nQyd3uvgHZVZi9dGe/UA2haT+09brRTkOpgMOEU7+/kg0kvnPaK8EO1DEcF/ntTZV\nRj+WDlEN5KjSavo6M0mO1jp1iWHP5PwXtrItQ/va95WJVdSoF9Yu+zrGgvrEDDXt\noO8PhxEFFQKBgQCNXkWGyyr0I96//yESZL38eHjwbcz042Q5zCmWSReKgwYQEqxf\nTL164R1x1seVwjlBn2813WrIfOrJjqtg7M8abRCx8KYJUU8smkWHFDaAwZEnU80l\nuRq2jD6BiXLpbpzXGH5IMIdDOnldCiZlVwPbigPKf2zR4Hvj3EjqLu9sqwKBgEBi\nBbe4lufC9G7VKu3HqRIagNNkXowWUCBrSNYTRuvV8N6k2JjB/p1EOTWMwK/8lFuI\naiveEXojen6YLYgIA0wLaEz9JeRFMByP5IauKBQwYzNyd1N4KtQ6+gvrrJI04pm+\nANPc4GxKaplJqQZ45UFTnz/hpZT8e1CnOczSekDBAoGBAJEmnXounNeWwIXDZw8q\nbccbvR/VJr3UffhwmgV78D2yfe2FuWG24C40Vz2rDqErbiJSL04dQRgKo0P/hkEh\ndT8oAxq6u8x+UxZBrZGAywKOJj7mxyu1bwzwEtvu5Uu1WvvQDC0peDO2NunOc9lb\ndKuPVOcyti5y3iQ6VY5rLGIM\n-----END PRIVATE KEY-----\n",
+    "client_email": "streamlit-service-account@trademash.iam.gserviceaccount.com",
+    "client_id": "102434720297791241942",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/streamlit-service-account%40trademash.iam.gserviceaccount.com",
+    "universe_domain": "googleapis.com"
+  }
+  
