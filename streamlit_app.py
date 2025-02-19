@@ -24,8 +24,8 @@ def save_to_supabase(winner: str, loser: str):
 # Streamlit app
 def main():
     # URL of the CSV file on GitHub
-    csv_url = "https://raw.githubusercontent.com/andrewkyne/trademash/refs/heads/main/players.csv?token=GHSAT0AAAAAAC7F6QRFJO4QXIFMVCRMTVCMZ5VKTRQ"
-     
+    csv_url = "https://raw.githubusercontent.com/andrewkyne/trademash/refs/heads/main/players.csv"
+    
     # Load data
     df = load_csv_from_github(csv_url)
 
@@ -33,10 +33,9 @@ def main():
         st.session_state['submitted'] = False
 
     # Initialize session state for random records if not already initialized
-    if "selected_records" not in st.session_state:
-        # Select two random records and store them in session state
+    if "selected_records" not in st.session_state or st.session_state.submitted:
         st.session_state.selected_records = df.sample(2)
-        st.session_state.submitted = False  # Flag to track if submission has been made
+        st.session_state.submitted = False  # Reset submission flag
 
     # Get the selected records from session state
     selected_records = st.session_state.selected_records
@@ -54,24 +53,20 @@ def main():
     
     # Handle submit action
     if st.button("Submit"):
-        # Ensure the submission happens only once
         if not st.session_state.submitted:
             if winner_choice.startswith("Record 1"):
                 save_to_supabase(record_1['Player'], record_2['Player'])
-            else:  # If user selects record 2
+            else:
                 save_to_supabase(record_2['Player'], record_1['Player'])
             
-            # Set the submission flag to True
             st.session_state.submitted = True
             st.success("Selection saved successfully!")
-        
-        # Optionally, create a button to load the next set of random records
-        if st.session_state.submitted:
-            next_set_button = st.button("Next Set of Records")
-            if next_set_button:
-                # Reset selected records to get a new random set
-                st.session_state.selected_records = df.sample(2)
-                st.session_state.submitted = False  # Reset submitted flag for the new round
+
+    # Always show the "Next Set of Records" button
+    if st.button("Next Set of Records"):
+        st.session_state.selected_records = df.sample(2)
+        st.session_state.submitted = False  # Reset submission flag
+        st.rerun()  # Proper rerun without errors
 
 if __name__ == "__main__":
     main()
