@@ -59,7 +59,7 @@ def main():
     saved_record_2 = format_for_saving(record_2)
     
     # Radio button for selecting the winner
-    winner_choice = st.radio("Which player do you prefer?", 
+    winner_choice = st.radio("If you were offered this trade, including the context of salary, which player do you prefer?", 
                              (f"Player 1: {formatted_record_1}", 
                               f"Player 2: {formatted_record_2}"))
     
@@ -75,7 +75,7 @@ def main():
             st.success("Vote submitted!")
 
     # Always show the "Next Set of Records" button
-    if st.button("Next Set of Records"):
+    if st.button("Next Set of Players"):
         st.session_state.selected_records = df.sample(2)
         st.session_state.submitted = False  # Reset submission flag
         st.rerun()  # Proper rerun without errors
