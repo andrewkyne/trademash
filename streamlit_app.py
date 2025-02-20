@@ -21,12 +21,25 @@ def save_to_supabase(winner: str, loser: str):
     }
     supabase.table("user_data").insert(data).execute()
 
-# Streamlit app
-def main():
+# Function to fetch leaderboard data using a custom query
+def fetch_leaderboard():
+    response = supabase.rpc("custom_leaderboard_query").execute()  # No parameters needed
+
+    if response.data:
+        return pd.DataFrame(response.data)
+
+    return pd.DataFrame(columns=["player", "elo_rating", "n", "w", "l", "last_modified_date"])
+
+# Streamlit App
+st.title("Fantasy Baseball 2.0 TradeMash")
+
+# Create tabs
+tab1, tab2 = st.tabs(["Voting", "Leaderboard"])
+
+# Voting Tab
+with tab1:
     # URL of the CSV file on GitHub
     csv_url = "https://raw.githubusercontent.com/andrewkyne/trademash/refs/heads/main/players.csv"
-    
-    st.title("Fantasy Baseball 2.0 TradeMash")
 
     # Load data
     df = load_csv_from_github(csv_url)
@@ -57,12 +70,12 @@ def main():
 
     saved_record_1 = format_for_saving(record_1)
     saved_record_2 = format_for_saving(record_2)
-    
+
     # Radio button for selecting the winner
     winner_choice = st.radio("If you were offered this trade, including the context of salary, which player do you prefer?", 
                              (f"Player 1: {formatted_record_1}", 
                               f"Player 2: {formatted_record_2}"))
-    
+
     # Handle submit action
     if st.button("Submit"):
         if not st.session_state.submitted:
@@ -70,7 +83,7 @@ def main():
                 save_to_supabase(saved_record_1, saved_record_2)
             else:
                 save_to_supabase(saved_record_2, saved_record_1)
-            
+
             st.session_state.submitted = True
             st.success("Vote submitted!")
 
@@ -80,5 +93,18 @@ def main():
         st.session_state.submitted = False  # Reset submission flag
         st.rerun()  # Proper rerun without errors
 
-if __name__ == "__main__":
-    main()
+# Leaderboard Tab
+with tab2:
+    st.subheader("Leaderboard")
+
+    st.text("Elo Ratings should update every 3 hours.\nLast Modified is the last time a matchup was processed for that player.")
+
+    leaderboard_df = fetch_leaderboard()
+
+    if not leaderboard_df.empty:
+        #st.dataframe(leaderboard_df.set_index(leaderboard_df.columns[0]))
+        leaderboard_df.columns = ['Rank', 'Player', 'Elo Rating', 'n', 'Wins', 'Losses', 'Last Modified']
+        st.dataframe(leaderboard_df, hide_index=True)
+
+    else:
+        st.write("No leaderboard data.")
