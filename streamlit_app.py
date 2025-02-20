@@ -104,7 +104,7 @@ with tab2:
     if not leaderboard_df.empty:
         #st.dataframe(leaderboard_df.set_index(leaderboard_df.columns[0]))
         leaderboard_df.columns = ['Rank', 'Player', 'Elo Rating', 'n', 'Wins', 'Losses', 'Last Modified']
-        st.dataframe(leaderboard_df, hide_index=True)
+        st.dataframe(leaderboard_df, hide_index=True, height=2000)
 
     else:
         st.write("No leaderboard data.")
