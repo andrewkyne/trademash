@@ -97,7 +97,7 @@ with tab1:
 with tab2:
     st.subheader("Leaderboard")
 
-    st.text("This page is not live. Elo Ratings should update every 3 hours.\nLast Modified is the last time Elo Rating was changed for that player.")
+    st.text("This page is not live. Elo Ratings re-process every 3 hours.\nLast Modified is the last time Elo Rating was changed for that player.")
 
     leaderboard_df = fetch_leaderboard()
 
